@@ -1,0 +1,16 @@
+DAWman is a program to record and playback loops of audio.
+
+LoopManager(Thread)
+    handleIndata
+        # Handle sounddevice audio input
+    handleOutdata
+        # Handle sounddevice audio output
+    
+    loops
+        # array of Loop class storing loop info
+
+
+Loop
+    layers
+        # layered audio data
+        # array of numpy audio arrays

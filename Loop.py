@@ -5,28 +5,34 @@ import queue
 import numpy as np
 
 class Loop():
-    def __init__(self, key, samplerate=48000, channels=1, device=1, record=False, playback=True):
-        # recorded data
+    def __init__(self, shape, key, record=False, playback=False):
+        # data
         self.key  = key
-        self.data = np.array([])
-        self.idx  = 0
+        self.data = []
 
         # state information
         self.record   = record
         self.playback = playback
-        self.loop     = True
-        
-        # recording params
-        self.samplerate = samplerate
-        self.channels   = channels
-        self.device     = device
+        self.idx      = 0
+
+        self.samplerate = 48000
+
+    # Get next audio frame
+    def getFrame(self):
+        frame = self.data[self.idx]
+        self.idx += 1
+
+        if self.idx >= len(self.data):
+            self.idx = 0
+
+        return frame
 
     # Dump to file
     def dump(self, filename=None):
         if not filename:
             filename = self.key + "_dump.wav"
 
-        with sf.SoundFile(filename, mode='x', samplerate=self.samplerate, channels=self.channels) as file:
+        with sf.SoundFile(filename, mode='x', samplerate=self.samplerate, channels=1) as file:
             for chunk in self.data:
                 file.write(chunk)
 

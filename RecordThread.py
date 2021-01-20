@@ -1,10 +1,9 @@
 from threading import Thread
-from queue     import Queue
 from numpy     import append
 import sounddevice as sd
 
 # Thread for recording
-class RecordThread(Thread):
+class AudioThread(Thread):
     def __init__(self, samplerate=48000, device=1, channels=1):
         Thread.__init__(self)
 

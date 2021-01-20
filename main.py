@@ -1,6 +1,6 @@
-from RecordThread import *
-from Loop         import *
-from msvcrt       import getch
+from LoopManager import *
+from Loop        import *
+from msvcrt      import getch
 
 import soundfile as sf
 
@@ -8,18 +8,11 @@ import soundfile as sf
 def showUI():
     print('\033c') # Clear console
     print(title)
-    for loop in recordThread.locations:
+    for loop in loopManager.loops:
         print(loop, end=", ")
     print()
     if setRecord:
         print("Press to record...")
-
-# check if a loop's key exists
-def getKeyLoop(key):
-    for loop in recordThread.locations:
-        if loop.key == key:
-            return loop
-    return None
 
 title = "DAW-Man"
 with open('title.txt', 'r') as file:
@@ -29,8 +22,8 @@ setRecord = False
 infoMode  = False
 
 # Start threads
-recordThread = RecordThread()
-recordThread.start()
+loopManager = LoopManager([], 1024)
+loopManager.start()
 while True:
     showUI()
 
@@ -47,18 +40,18 @@ while True:
     key = key.decode('utf-8')
 
     # Set record/playback flags
-    loop = getKeyLoop(key)
+    loop = loopManager.getLoopByKey(key)
     if loop is not None:
         if setRecord:
             loop.record = not loop.record
         elif infoMode:
-            print("size: " + str(loop.data.size))
+            print("size: " + str(len(loop.data)))
             loop.dump()
             getch()
         else:
             loop.playback = not loop.playback
     else:
-        recordThread.locations.append(Loop(key, record=setRecord))
+        loopManager.loops.append(Loop((loopManager.blocksize, loopManager.channels), key, record=setRecord))
 
 # Exit threads
-recordThread.stop()
+loopManager.stop()

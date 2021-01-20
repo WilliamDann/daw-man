@@ -1,1 +1,6 @@
+# remove pycache data
 __pycache__/
+
+# remove vscode, but keep spellright data
+.vscode/*
+!.vscode/spellright.dict
