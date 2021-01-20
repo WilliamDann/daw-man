@@ -28,17 +28,20 @@ class LoopManager(Thread):
         if status:
             print(status)
         self.queue.put(indata.copy())
-
     def handleOutdata(self, outdata, frames, time, status):
         if status:
             print(status)
 
-        if (len(self.loops) > 0):
-            if (self.loops[0].playback):
-                frames = self.loops[0].getFrame()
-                outdata[:] = frames
+        chunk = None
+        for loop in self.loops:
+            if loop.playback:
+                if chunk is None:
+                    chunk = loop.getFrame().copy()
+                else:
+                    chunk += loop.getFrame()
                     
-    
+        outdata[:] = chunk
+                    
     # thread control
     def run(self):
         with sd.InputStream(blocksize=self.blocksize, samplerate=self.samplerate, device=self.device, channels=self.channels, callback=self.handleIndata):

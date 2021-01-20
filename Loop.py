@@ -15,8 +15,6 @@ class Loop():
         self.playback = playback
         self.idx      = 0
 
-        self.samplerate = 48000
-
     # Get next audio frame
     def getFrame(self):
         frame = self.data[self.idx]
@@ -28,13 +26,13 @@ class Loop():
         return frame
 
     # Dump to file
-    def dump(self, filename=None):
-        if not filename:
-            filename = self.key + "_dump.wav"
-
-        with sf.SoundFile(filename, mode='x', samplerate=self.samplerate, channels=1) as file:
-            for chunk in self.data:
-                file.write(chunk)
+    #def dump(self, filename=None):
+    #    if not filename:
+    #        filename = self.key + "_dump.wav"
+    #
+    #    with sf.SoundFile(filename, mode='x', samplerate=self.samplerate, channels=1) as file:
+    #        for chunk in self.data:
+    #            file.write(chunk)
 
     def __str__(self):
         string = ""

@@ -14,16 +14,16 @@ def showUI():
     if setRecord:
         print("Press to record...")
 
-title = "DAW-Man"
+# load data
+setRecord = False
+title     = "DAW-Man"
 with open('title.txt', 'r') as file:
     title = file.read()
-
-setRecord = False
-infoMode  = False
 
 # Start threads
 loopManager = LoopManager([], 1024)
 loopManager.start()
+
 while True:
     showUI()
 
@@ -34,9 +34,6 @@ while True:
     if key == b'\r':
         setRecord = not setRecord
         continue
-    if key == b'?':
-        infoMode = not infoMode
-        continue
     key = key.decode('utf-8')
 
     # Set record/playback flags
@@ -44,10 +41,6 @@ while True:
     if loop is not None:
         if setRecord:
             loop.record = not loop.record
-        elif infoMode:
-            print("size: " + str(len(loop.data)))
-            loop.dump()
-            getch()
         else:
             loop.playback = not loop.playback
     else:
